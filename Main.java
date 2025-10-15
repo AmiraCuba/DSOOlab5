@@ -1,11 +1,9 @@
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Gestor_General gestor = new Gestor_General();
         int opcion;
-
         do {
             System.out.println("\n===== SISTEMA DE CITAS MÉDICAS =====");
             System.out.println("1. Registrar doctor");
@@ -26,51 +24,36 @@ public class Main {
                     System.out.print("Código del doctor: ");
                     int codigo = sc.nextInt();
                     sc.nextLine();
-
                     System.out.print("Nombre del doctor: ");
                     String nombre = sc.nextLine();
-
                     System.out.print("Especialidad: ");
                     String especialidad = sc.nextLine();
-
-                    System.out.print("Ingrese cantidad de horarios disponibles: ");
-                    int cantHorarios = sc.nextInt();
-                    sc.nextLine();
-
-                    String[] horarios = new String[cantHorarios];
-                    for (int i = 0; i < cantHorarios; i++) {
-                        System.out.print("Horario " + (i + 1) + " (ej. 08:00-12:00): ");
-                        horarios[i] = sc.nextLine();
-                    }
-
-                    gestor.agregarDoctor(codigo, nombre, especialidad, horarios);
+                    System.out.print("Hora de entrada: ");
+                    String horaEntrada = sc.next();
+                    System.out.print("Hora de salida: ");
+                    String horaSalida = sc.next();
+                    gestor.agregarDoctor(codigo, nombre, especialidad, horaEntrada, horaSalida);
                 }
-
                 case 2 -> {
                     System.out.print("Código del paciente: ");
                     int codigo = sc.nextInt();
                     System.out.print("DNI del paciente (8 dígitos): ");
-                    int dni = sc.nextInt();
+                    String dni = sc.next();
                     System.out.print("Edad del paciente: ");
                     int edad = sc.nextInt();
                     sc.nextLine();
                     System.out.print("Nombre del paciente: ");
                     String nombre = sc.nextLine();
-
                     gestor.agregarPaciente(dni, codigo, nombre, edad);
                 }
-
                 case 3 -> {
                     if (gestor == null) break;
-
                     System.out.print("Código de la cita: ");
                     int codigo = sc.nextInt();
                     sc.nextLine();
-
                     System.out.print("Código del paciente: ");
                     int codigoPac = sc.nextInt();
                     sc.nextLine();
-
                     System.out.print("Código del doctor: ");
                     int codigoDoc = sc.nextInt();
                     sc.nextLine();
@@ -94,7 +77,7 @@ public class Main {
                     }
 
                     if (doctorEncontrado == null || pacienteEncontrado == null) {
-                        System.out.println("❌ Doctor o paciente no encontrado.");
+                        System.out.println("Doctor o paciente no encontrado.");
                         break;
                     }
 
@@ -107,28 +90,18 @@ public class Main {
 
                     gestor.agregarCita(codigo, pacienteEncontrado, doctorEncontrado, fecha, hora, estado);
                 }
-
                 case 4 -> gestor.mostrarCitas();
-
                 case 5 -> gestor.mostrarCitasDoctor();
-
                 case 6 -> gestor.mostrarCitasPaciente();
-
                 case 7 -> {
                     System.out.print("Nuevo estado (pendiente / atendida / cancelada): ");
                     String estado = sc.nextLine();
                     gestor.cambiarEstado(estado);
                 }
-
                 case 8 -> gestor.mostrarNumeroCitas();
-
-                case 0 -> System.out.println("👋 Saliendo del sistema...");
-
+                case 0 -> System.out.println("Saliendo del sistema...");
                 default -> System.out.println("Opción inválida, intente nuevamente.");
             }
-
         } while (opcion != 0);
-
-        sc.close();
     }
 }

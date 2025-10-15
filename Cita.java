@@ -2,9 +2,7 @@ public class Cita {
     private int codigo;
     private Paciente paciente;
     private Doctor doctor;
-    private String estado;
-    private String fecha;
-    private String hora;
+    private String estado, fecha, hora;
 
     /* Constructor general */    
     public Cita(int codigo, Paciente paciente, Doctor doctor, String estado, String fecha, String hora) {
