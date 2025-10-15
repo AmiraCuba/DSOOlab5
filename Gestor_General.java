@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-
 public class Gestor_General {
-
     private ArrayList<Doctor> doctores;
     private ArrayList<Paciente> pacientes;
     private ArrayList<Cita> citas;
@@ -23,7 +21,7 @@ public class Gestor_General {
         return false;
     }
 
-    public boolean codigoDoblePaciente(int codigo) {
+    public boolean codigoExistentePaciente(int codigo) {
         for (Paciente p : pacientes) {
             if (p.getCodigo() == codigo) {
                 return true;
@@ -32,7 +30,7 @@ public class Gestor_General {
         return false;
     }
 
-    public boolean codigoDobleCita(int codigo) {
+    public boolean codigoExistenteCita(int codigo) {
         for (Cita c : citas) {
             if (c.getCodigo() == codigo) {
                 return true;
@@ -142,53 +140,74 @@ public class Gestor_General {
     public void mostrarNumeroCitas() {
         System.out.println("Número total de citas registradas: " + citas.size());
     }
+    
+    public int contarCitasPorEstado(String estado){
+        int cantidad = 0;
+        for (Cita c : citas){
+            if(c.getEstado().equals(estado)){
+                cantidad++;
+            }
+        }
+        return cantidad;
+    }
+
+    public void mostrarNumeroCanceladas(){
+        int cantidad = contarCitasPorEstado("cancelada");
+        System.out.println("La cantidad de citas canceladas es: "+ cantidad);
+    }
+
+    public void mostrarNumeroAtendidas(){
+        int cantidad = contarCitasPorEstado("atendida");
+        System.out.println("La cantidad de citas atendidas es: "+ cantidad);
+    }
 
     // Método getters
     public ArrayList<Doctor> getDoctores() {
         return doctores;
     }
-
     public ArrayList<Paciente> getPacientes() {
         return pacientes;
     }
-
     public ArrayList<Cita> getCitas() {
         return citas;
     }
 
+/* VALIDACIONES FUERA DE LOS MÉTODOS */
     // Métodos de agregar
-    public void agregarDoctor(int codigo, String nombre, String especialidad, String[] horario) {
+    public void agregarDoctor(int codigo, String nombre, String especialidad, String horaEntrada, String horaSalida) {
         if (codigoExistenteDoctor(codigo)) {
             System.out.println("Ya existe un doctor con ese código.");
             return;
         }
-        String horarioStr = String.join(", ", horario);
-        Doctor nuevo = new Doctor(codigo, nombre, especialidad, horarioStr);
+        if (!validarHora(horaEntrada) || !validarHora(horaSalida)){
+            System.out.println("El formato de la hora es incorrecto");
+            return;
+        }
+        Doctor nuevo = new Doctor(codigo, nombre, especialidad, horaEntrada, horaSalida);
         doctores.add(nuevo);
         System.out.println("Doctor agregado correctamente.");
     }
 
-    public void agregarPaciente(int dni, int codigo, String nombre, int edad) {
-        String dniStr = String.valueOf(dni);
-        if (codigoDoblePaciente(codigo)) {
+    public void agregarPaciente(String dni, int codigo, String nombre, int edad) {
+        if (codigoExistentePaciente(codigo)) {
             System.out.println("Ya existe un paciente con ese código.");
             return;
         }
-        if (existenteDni(dniStr)) {
+        if (existenteDni(dni)) {
             System.out.println("El DNI ya está registrado.");
             return;
         }
-        if (!validarDni(dniStr)) {
+        if (!validarDni(dni)) {
             System.out.println("DNI no válido. Debe contener 8 dígitos.");
             return;
         }
-        Paciente nuevo = new Paciente(codigo, nombre, edad, dniStr);
+        Paciente nuevo = new Paciente(codigo, nombre, edad, dni);
         pacientes.add(nuevo);
         System.out.println("Paciente agregado correctamente.");
     }
 
     public void agregarCita(int codigo, Paciente paciente, Doctor doctor, String fecha, String hora, String estado) {
-        if (codigoDobleCita(codigo)) {
+        if (codigoExistenteCita(codigo)) {
             System.out.println("Ya existe una cita con ese código.");
             return;
         }
