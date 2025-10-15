@@ -1,4 +1,4 @@
-package javaapplication73;
+
 public class Doctor {
     
     private int codigo;
